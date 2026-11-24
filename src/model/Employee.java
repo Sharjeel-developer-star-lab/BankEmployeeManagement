@@ -4,11 +4,11 @@ package model;
 public class Employee {
 
     private final String name;
-    private final String managerType;
-    private final String department;
+    private final ManagerType managerType;
+    private final Department department;
 
     // Constructor
-    public Employee(String name, String managerType, String department) {
+    public Employee(String name, ManagerType managerType, Department department) {
         this.name = name;
         this.managerType = managerType;
         this.department = department;
@@ -19,11 +19,11 @@ public class Employee {
         return name;
     }
 
-    public String getManagerType() {
+    public ManagerType getManagerType() {
         return managerType;
     }
 
-    public String getDepartment() {
+    public Department getDepartment() {
         return department;
     }
 
