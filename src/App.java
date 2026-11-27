@@ -6,7 +6,7 @@ import algorithms.MergeSort;
 import algorithms.BinarySearch;
 import model.ManagerType;
 import model.Department;
-
+import tree.EmployeeBinaryTree;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -75,9 +75,8 @@ public class App {
                         break;
 
                     case CREATE_BINARY_TREE:
-                        System.out.println("Binary tree feature coming next.");
+                        createBinaryTree(model);
                         break;
-
                     case EXIT:
                         running = false;
                         System.out.println("Program closed successfully.");
@@ -216,4 +215,33 @@ public class App {
             System.out.println(newEmployee);
         }
     }
+
+    // Create and display the employee hierarchy
+    private static void createBinaryTree(EmployeeModel model) {
+
+        System.out.println("\nCREATE BINARY TREE selected");
+
+        if (model.getEmployees().size() < 20) {
+            System.out.println("At least 20 employees are required.");
+            return;
+        }
+
+        EmployeeBinaryTree tree = new EmployeeBinaryTree();
+
+        // Insert employee records into the binary tree
+        for (Employee employee : model.getEmployees()) {
+            tree.insert(employee);
+        }
+
+        System.out.println("\nEmployee Hierarchy:");
+
+        tree.displayLevelOrder();
+
+        System.out.println("\nTree height (levels): "
+                + tree.getHeight());
+
+        System.out.println("Total node count: "
+                + tree.getNodeCount());
+    }
+
 }
