@@ -10,13 +10,14 @@ public class EmployeeModel {
 
     private final ArrayList<Employee> employees = new ArrayList<>();
 
+    private final ArrayList<Employee> newlyAddedEmployees = new ArrayList<>();
+
     // Read employee records from the text file
     public void loadEmployees(String filename) throws IOException {
 
         ArrayList<Employee> loaded = new ArrayList<>();
 
-        try (BufferedReader reader =
-                new BufferedReader(new FileReader(filename))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
 
             // Skip the header row
             reader.readLine();
@@ -38,11 +39,9 @@ public class EmployeeModel {
                 String name = data[0].trim() + " "
                         + data[1].trim();
 
-                Department department =
-                        findDepartment(data[5].trim());
+                Department department = findDepartment(data[5].trim());
 
-                ManagerType managerType =
-                        findManagerType(data[7].trim());
+                ManagerType managerType = findManagerType(data[7].trim());
 
                 if (department != null) {
 
@@ -87,5 +86,16 @@ public class EmployeeModel {
     // Return employee records
     public ArrayList<Employee> getEmployees() {
         return employees;
+    }
+
+    // Add a new employee to both lists
+    public void addEmployee(Employee employee) {
+        employees.add(employee);
+        newlyAddedEmployees.add(employee);
+    }
+
+    // Return all newly added employee records
+    public ArrayList<Employee> getNewlyAddedEmployees() {
+        return newlyAddedEmployees;
     }
 }

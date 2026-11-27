@@ -4,6 +4,8 @@ import model.EmployeeModel;
 import model.MenuOption;
 import algorithms.MergeSort;
 import algorithms.BinarySearch;
+import model.ManagerType;
+import model.Department;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -69,7 +71,7 @@ public class App {
                         break;
 
                     case ADD_RECORDS:
-                        System.out.println("Add records feature coming next.");
+                        addEmployees(model, scanner);
                         break;
 
                     case CREATE_BINARY_TREE:
@@ -125,14 +127,93 @@ public class App {
                 model.getEmployees(),
                 name,
                 0,
-                model.getEmployees().size() - 1
-        );
+                model.getEmployees().size() - 1);
 
         if (result != null) {
             System.out.println("\nEmployee found:");
             System.out.println(result);
         } else {
             System.out.println("Employee not found.");
+        }
+    }
+
+    // Add and validate new employee records
+    private static void addEmployees(
+            EmployeeModel model, Scanner scanner) {
+
+        System.out.println("\nADD RECORDS selected");
+
+        System.out.print("Enter employee name: ");
+        String name = scanner.nextLine().trim();
+
+        if (name.isEmpty()) {
+            System.out.println("Name cannot be empty.");
+            return;
+        }
+
+        // Display available manager types
+        ManagerType[] types = ManagerType.values();
+
+        System.out.println("\nSelect Manager Type:");
+
+        for (int i = 0; i < types.length; i++) {
+            System.out.println((i + 1) + ". " + types[i]);
+        }
+
+        int managerChoice;
+
+        try {
+            managerChoice = Integer.parseInt(
+                    scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid manager choice.");
+            return;
+        }
+
+        if (managerChoice < 1 || managerChoice > types.length) {
+            System.out.println("Invalid manager choice.");
+            return;
+        }
+
+        // Display available departments
+        Department[] departments = Department.values();
+
+        System.out.println("\nSelect Department:");
+
+        for (int i = 0; i < departments.length; i++) {
+            System.out.println((i + 1) + ". " + departments[i]);
+        }
+
+        int departmentChoice;
+
+        try {
+            departmentChoice = Integer.parseInt(
+                    scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid department choice.");
+            return;
+        }
+
+        if (departmentChoice < 1
+                || departmentChoice > departments.length) {
+            System.out.println("Invalid department choice.");
+            return;
+        }
+
+        // Create and store the new employee
+        Employee employee = new Employee(
+                name,
+                types[managerChoice - 1],
+                departments[departmentChoice - 1]);
+
+        model.addEmployee(employee);
+
+        System.out.println("\nEmployee added successfully:");
+
+        System.out.println("\nAll newly added employees:");
+
+        for (Employee newEmployee : model.getNewlyAddedEmployees()) {
+            System.out.println(newEmployee);
         }
     }
 }
