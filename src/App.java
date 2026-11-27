@@ -2,7 +2,9 @@
 import model.Employee;
 import model.EmployeeModel;
 import algorithms.MergeSort;
+import algorithms.BinarySearch;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class App {
 
@@ -35,6 +37,28 @@ public class App {
                 System.out.println((i + 1) + ". "
                         + employee.getName());
             }
+
+            // Test recursive Binary Search
+            Scanner searchScanner = new Scanner(System.in);
+
+            System.out.print("\nEnter employee name to search: ");
+
+            String searchName = searchScanner.nextLine().trim();
+
+            Employee result = BinarySearch.search(
+                    model.getEmployees(),
+                    searchName,
+                    0,
+                    model.getEmployees().size() - 1
+            );
+
+            if (result != null) {
+                System.out.println("\nEmployee found:");
+                System.out.println(result);
+            } else {
+                System.out.println("Employee not found.");
+            }
+            searchScanner.close();
 
         } catch (IOException e) {
 
