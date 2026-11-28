@@ -39,55 +39,56 @@ public class EmployeeController {
                 try {
                     choice = Integer.parseInt(scanner.nextLine().trim());
                 } catch (NumberFormatException e) {
-                    System.out.println("Please enter a valid number.");
+                    view.displayMessage("Please enter a valid number.");
                     continue;
                 }
 
                 MenuOption selected = MenuOption.fromNumber(choice);
-
                 if (selected == null) {
-                    System.out.println("Invalid menu option.");
+                    view.displayMessage("Invalid menu option.");
                     continue;
+
                 }
 
                 switch (selected) {
 
                     case SORT:
-                        sortEmployees(model);
+                        sortEmployees(model, view);
                         break;
 
                     case SEARCH:
-                        searchEmployees(model, scanner);
+                        searchEmployees(model, scanner, view);
                         break;
 
                     case ADD_RECORDS:
-                        addEmployees(model, scanner);
+                        addEmployees(model, scanner, view);
                         break;
 
                     case CREATE_BINARY_TREE:
-                        createBinaryTree(model);
+                        createBinaryTree(model, view);
                         break;
                     case EXIT:
                         running = false;
-                        System.out.println("Program closed successfully.");
+                        view.displayMessage("Program closed successfully.");
+                        ;
                         break;
                 }
             }
 
         } catch (IOException e) {
 
-            System.out.println("Error reading file: "
+            view.displayMessage("Error reading file: "
                     + e.getMessage());
         }
     }
 
     // Sort and display the first 20 employees
-    private static void sortEmployees(EmployeeModel model) {
+    private static void sortEmployees(EmployeeModel model, EmployeeView view) {
 
         MergeSort.sort(model.getEmployees());
 
-        System.out.println("\nSORT selected");
-        System.out.println("First 20 employees:");
+        view.displayMessage("\nSORT selected");
+        view.displayMessage("First 20 employees:");
 
         int limit = Math.min(20, model.getEmployees().size());
 
@@ -95,21 +96,20 @@ public class EmployeeController {
 
             Employee employee = model.getEmployees().get(i);
 
-            System.out.println((i + 1) + ". "
+            view.displayMessage((i + 1) + ". "
                     + employee.getName());
         }
     }
 
     // Search for an employee by name
     private static void searchEmployees(
-            EmployeeModel model, Scanner scanner) {
+            EmployeeModel model, Scanner scanner, EmployeeView view) {
 
         // Binary Search requires sorted data
         MergeSort.sort(model.getEmployees());
 
-        System.out.println("\nSEARCH selected");
-        System.out.print("Enter employee name to search: ");
-
+        view.displayMessage("\nSEARCH selected");
+        view.displayPrompt("Enter employee name to search: ");
         String name = scanner.nextLine().trim();
 
         Employee result = BinarySearch.search(
@@ -119,34 +119,33 @@ public class EmployeeController {
                 model.getEmployees().size() - 1);
 
         if (result != null) {
-            System.out.println("\nEmployee found:");
-            System.out.println(result);
+            view.displayMessage("\nEmployee found:");
+            view.displayMessage(result.toString());
         } else {
-            System.out.println("Employee not found.");
+            view.displayMessage("Employee not found.");
         }
     }
 
     // Add and validate new employee records
     private static void addEmployees(
-            EmployeeModel model, Scanner scanner) {
+            EmployeeModel model, Scanner scanner, EmployeeView view) {
+        view.displayMessage("\nADD RECORDS selected");
 
-        System.out.println("\nADD RECORDS selected");
-
-        System.out.print("Enter employee name: ");
+        view.displayPrompt("Enter employee name: ");
         String name = scanner.nextLine().trim();
 
         if (name.isEmpty()) {
-            System.out.println("Name cannot be empty.");
+            view.displayMessage("Name cannot be empty.");
             return;
         }
 
         // Display available manager types
         ManagerType[] types = ManagerType.values();
 
-        System.out.println("\nSelect Manager Type:");
+        view.displayMessage("\nSelect Manager Type:");
 
         for (int i = 0; i < types.length; i++) {
-            System.out.println((i + 1) + ". " + types[i]);
+            view.displayMessage((i + 1) + ". " + types[i]);
         }
 
         int managerChoice;
@@ -155,22 +154,21 @@ public class EmployeeController {
             managerChoice = Integer.parseInt(
                     scanner.nextLine().trim());
         } catch (NumberFormatException e) {
-            System.out.println("Invalid manager choice.");
+            view.displayMessage("Invalid manager choice.");
             return;
         }
 
         if (managerChoice < 1 || managerChoice > types.length) {
-            System.out.println("Invalid manager choice.");
+            view.displayMessage("Invalid manager choice.");
             return;
         }
 
         // Display available departments
         Department[] departments = Department.values();
 
-        System.out.println("\nSelect Department:");
-
+        view.displayMessage("\nSelect Department:");
         for (int i = 0; i < departments.length; i++) {
-            System.out.println((i + 1) + ". " + departments[i]);
+            view.displayMessage((i + 1) + ". " + departments[i]);
         }
 
         int departmentChoice;
@@ -179,13 +177,13 @@ public class EmployeeController {
             departmentChoice = Integer.parseInt(
                     scanner.nextLine().trim());
         } catch (NumberFormatException e) {
-            System.out.println("Invalid department choice.");
+            view.displayMessage("Invalid department choice.");
             return;
         }
 
         if (departmentChoice < 1
                 || departmentChoice > departments.length) {
-            System.out.println("Invalid department choice.");
+            view.displayMessage("Invalid department choice.");
             return;
         }
 
@@ -197,22 +195,21 @@ public class EmployeeController {
 
         model.addEmployee(employee);
 
-        System.out.println("\nEmployee added successfully:");
+        view.displayMessage("\nEmployee added successfully:");
 
-        System.out.println("\nAll newly added employees:");
+        view.displayMessage("\nAll newly added employees:");
 
         for (Employee newEmployee : model.getNewlyAddedEmployees()) {
-            System.out.println(newEmployee);
+            view.displayMessage(newEmployee.toString());
         }
     }
 
     // Create and display the employee hierarchy
-    private static void createBinaryTree(EmployeeModel model) {
+    private static void createBinaryTree(EmployeeModel model, EmployeeView view) {
 
-        System.out.println("\nCREATE BINARY TREE selected");
-
+        view.displayMessage("\nCREATE BINARY TREE selected");
         if (model.getEmployees().size() < 20) {
-            System.out.println("At least 20 employees are required.");
+            view.displayMessage("At least 20 employees are required.");
             return;
         }
 
@@ -223,14 +220,14 @@ public class EmployeeController {
             tree.insert(employee);
         }
 
-        System.out.println("\nEmployee Hierarchy:");
+        view.displayMessage("\nEmployee Hierarchy:");
 
         tree.displayLevelOrder();
 
-        System.out.println("\nTree height (levels): "
+        view.displayMessage("\nTree height (levels): "
                 + tree.getHeight());
 
-        System.out.println("Total node count: "
+        view.displayMessage("Total node count: "
                 + tree.getNodeCount());
     }
 
